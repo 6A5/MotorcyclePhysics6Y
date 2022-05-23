@@ -61,7 +61,8 @@ public class MotoController : MonoBehaviour {
 	}
 
 	void FixedUpdate() {
-		var input = new MotoInput();
+        #region 輸入
+        var input = new MotoInput();
 
 		if (Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) input.acceleration = 1;
 		if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) input.steer += 1;
@@ -77,8 +78,8 @@ public class MotoController : MonoBehaviour {
 
 		motoMove(motoControl(input));
 		updateWheels();
-
-		if (Input.GetKeyDown(KeyCode.Backspace)) {
+        #endregion
+        if (Input.GetKeyDown(KeyCode.Backspace)) {
 			pickUp();
 		}
 
@@ -87,6 +88,9 @@ public class MotoController : MonoBehaviour {
 		}
 	}
 
+	/// <summary>
+	/// 回正
+	/// </summary>
 	private void pickUp() {
 		Transform t = GetComponent<Transform>();
 		t.position = t.position + new Vector3(0, 0.2f, 0);
@@ -108,7 +112,9 @@ public class MotoController : MonoBehaviour {
 		var moveForward = speed.normalized;
 
 		var angle = Vector3.Dot(moveForward, Vector3.Cross(thisTransform.up, new Vector3(0, 1, 0)));
+		// print("ANGLE : " + angle + ", Cross : " + Vector3.Cross(thisTransform.up, new Vector3(0, 1, 0)));
 		var omega = (angle - prevAngle) / Time.fixedDeltaTime;
+		//print(omega);
 		prevAngle = angle;
 		prevOmega = omega;
 
@@ -149,6 +155,9 @@ public class MotoController : MonoBehaviour {
 		WColBack.motorTorque = maxMotorTorque * input.acceleration;
 	}
 
+	/// <summary>
+	/// 更新輪胎旋轉
+	/// </summary>
 	private void updateWheels() {
 		float delta = Time.fixedDeltaTime;
 
